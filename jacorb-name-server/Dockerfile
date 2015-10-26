@@ -21,7 +21,4 @@ RUN curl -LOk http://www.jacorb.org/releases/$JACORB_VERSION/jacorb-$JACORB_VERS
     && mv jacorb-$JACORB_VERSION $JACORB_HOME \
     && ant scripts -f $JACORB_HOME/build.xml
 
-COPY docker-entrypoint.sh docker-entrypoint.sh
-
-ENTRYPOINT ["./docker-entrypoint.sh"]
 CMD ns -Djacorb.log.default.verbosity=3 -DOAPort=$NAME_SERVER_PORT -Djacorb.naming.ior_filename=$JACORB_HOME/NS_Ref
