@@ -16,6 +16,6 @@ Resources related to JTS transaction service
 Resources related to LRA coordinator (implementation of
 https://github.com/jbosstm/microprofile-sandbox/blob/master/proposals/0009-LRA/README.md[Consistency Models for Microservices: Long Running Actions])
 
-* link:./lra/dockerfile[dockerfiles] - docker files to create Narayana components
-* link:./lra/openshift-template[templates] - Open Shift templates for easy deployment
-  of Narayana components
+* link:./lra/dockerfile[dockerfiles] - A docker file to create LRA coordinator (available on https://hub.docker.com/r/jbosstm[hub.docker.com] too)
+* link:./lra/openshift-template[templates] - Open Shift template for easy deployment
+
