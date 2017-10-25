@@ -1,0 +1,139 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: lra-coordinator
+  annotations:
+    openshift.io/display-name: "Narayana LRA Coordinator (Ephemeral)" 
+    description: >-
+      Coordinator of REST long running actions (transactions), how that works. See spec:
+      https://github.com/jbosstm/microprofile-sandbox/blob/0009-LRA/proposals/0009-LRA/0009-LRA.md
+    template.openshift.io/long-description: >-
+      This template defines deployment of Narayana LRA (long running actions) coordinator.
+      This coordinator is deployed as a service available for any deployment in the project.
+      The coordinator offers REST endpoints where applications can contact it and enlist actions
+      to a LRA action. If satisfies the spec definition the application is later informed
+      if LRA was successfuly completed or failed (compensate is needed).
+      The transaction handling is based on Saga pattern.
+    tags: "java, transaction, saga" 
+    iconClass: fa-shield
+    template.openshift.io/provider-display-name: "Red Hat, Inc." 
+    template.openshift.io/documentation-url: "https://github.com/jbosstm/narayana/tree/master/rts/lra/lra-coordinator" 
+    template.openshift.io/support-url: "https://access.redhat.com"
+  message: "LRA coordinator is ready to serve actions"
+labels:
+  template: "lra-coordinator"
+parameters:
+  - name: APPLICATION_NAME
+    value: lra-coordinator
+    displayName: "LRA Coordinator App Name"
+    description: "The name for application created by this template."
+    required: true
+  - name: DOCKER_IMAGE
+    value: "docker.io/jbosstm/lra-coordinator:latest"
+    displayName: "Docker image of LRA coordinator"
+    required: true
+objects:
+- kind: Service
+  apiVersion: v1
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+    labels:
+      app: ${APPLICATION_NAME}
+    name: ${APPLICATION_NAME}
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      app: ${APPLICATION_NAME}
+      deploymentconfig: ${APPLICATION_NAME}
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- kind: DeploymentConfig
+  apiVersion: v1
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewApp
+    generation: 1
+    labels:
+      app: ${APPLICATION_NAME}
+    name: ${APPLICATION_NAME}
+  spec:
+    replicas: 1
+    selector:
+      app: ${APPLICATION_NAME}
+      deploymentconfig: ${APPLICATION_NAME}
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        annotations:
+          openshift.io/generated-by: OpenShiftNewApp
+        labels:
+          app: ${APPLICATION_NAME}
+          deploymentconfig: ${APPLICATION_NAME}
+      spec:
+        containers:
+        - imagePullPolicy: IfNotPresent
+          name: ${APPLICATION_NAME}
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - type: ConfigChange
+    - type: ImageChange
+      imageChangeParams:
+        automatic: true
+        containerNames:
+        - ${APPLICATION_NAME}
+        from:
+          kind: ImageStreamTag
+          name: lra-coordinator:1.0
+  status:
+    availableReplicas: 0
+    latestVersion: 0
+    observedGeneration: 0
+    replicas: 0
+    unavailableReplicas: 0
+    updatedReplicas: 0
+- kind: ImageStream
+  apiVersion: v1
+  metadata:
+    generation: 0
+    labels:
+      app: lra-coordinator
+    name: lra-coordinator
+  spec:
+    lookupPolicy:
+      local: true
+    tags:
+    - from:
+        kind: DockerImage
+        name: ${DOCKER_IMAGE}
+      generation: 0
+      importPolicy: {}
+      name: "1.0"
+      referencePolicy:
+        type: Source

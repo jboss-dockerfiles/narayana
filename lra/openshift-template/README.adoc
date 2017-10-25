@@ -1,0 +1,17 @@
+= Template for deploying lra coordinator to Open Shift
+
+Importing template to OpenShift
+
+```bash
+# relative path
+oc create -f lra-coordinator-template.yaml
+
+# absolute path
+cat /home/narayana/jboss-dockerfiles/lra/openshift-template/lra-coordinator-template.yaml | oc create -f -
+```
+
+Deploying lra coordinator onto Open Shift 
+
+```bash
+oc new-app --template=lra-coordinator -e LOG_LEVEL=TRACE
+```

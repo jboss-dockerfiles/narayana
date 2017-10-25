@@ -1,0 +1,21 @@
+= Dockerfile for lra-coordinator
+
+Use this dockerfile for building lra coordinator.
+You can redefine following variables when building the image.
+
+`NARAYANA_VERSION`::
+  is used only during docker build and defines what version of Narayana
+  will be downloaded and lra coordinator extracted from that
+`LOG_LEVEL`::
+  could be defined on docker run, value changes log level produced by the WildFly Swarm,
+  the values are standard log levels (INFO, DEBUG, TRACE...)
+
+The lra coordinator is run under user `jboss` and exposes port `8080` for communication.
+
+== Usage
+
+```bash
+# export NARAYANA_VERSION=...
+docker build --no-cache --build-arg NARAYANA_VERSION=$NARAYANA_VERSION .
+docker run -p 8080:8080 --rm -it -e LOG_LEVEL=TRACE lra-coordinator
+```
