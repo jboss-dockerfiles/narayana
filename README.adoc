@@ -1,0 +1,21 @@
+= Narayana Docker and Open Shift artifacts
+
+This is a set of resources related to http://narayana.io[Narayana].
+
+You can find here docker images and templates for Open Shift
+
+== JTS related
+
+Resources related to JTS transaction service
+
+* link:./jts/jacorb-name-server[jacorb-name-server] - JacORB name server to register remote CORBA resources
+* link:./jts/jts-transaction-service[jts-transaction-service] -  Standalone JTS transaction service
+
+== LRA related
+
+Resources related to LRA coordinator (implementation of
+https://github.com/jbosstm/microprofile-sandbox/blob/master/proposals/0009-LRA/README.md[Consistency Models for Microservices: Long Running Actions])
+
+* link:./lra/dockerfile[dockerfiles] - docker files to create Narayana components
+* link:./lra/openshift-template[templates] - Open Shift templates for easy deployment
+  of Narayana components
