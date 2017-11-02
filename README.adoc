@@ -1,8 +1,8 @@
-= Narayana Docker and Open Shift artifacts
+= Narayana Docker and OpenShift artifacts
 
 This is a set of resources related to http://narayana.io[Narayana].
 
-You can find here docker images and templates for Open Shift
+You can find here docker images and templates for OpenShift
 
 == JTS related
 
@@ -17,5 +17,5 @@ Resources related to LRA coordinator (implementation of
 https://github.com/jbosstm/microprofile-sandbox/blob/master/proposals/0009-LRA/README.md[Consistency Models for Microservices: Long Running Actions])
 
 * link:./lra/dockerfile[dockerfiles] - A docker file to create LRA coordinator (available on https://hub.docker.com/r/jbosstm[hub.docker.com] too)
-* link:./lra/openshift-template[templates] - Open Shift template for easy deployment
-
+* link:./lra/openshift-template[templates] - OpenShift template for easy starting
+  the lra-coordinator as an application
