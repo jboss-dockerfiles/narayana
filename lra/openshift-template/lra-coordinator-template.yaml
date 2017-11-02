@@ -3,7 +3,7 @@ apiVersion: v1
 metadata:
   name: lra-coordinator
   annotations:
-    openshift.io/display-name: "Narayana LRA Coordinator (Ephemeral)" 
+    openshift.io/display-name: "Narayana LRA Coordinator"
     description: >-
       Coordinator of REST long running actions (transactions), how that works. See spec:
       https://github.com/jbosstm/microprofile-sandbox/blob/0009-LRA/proposals/0009-LRA/0009-LRA.md
@@ -14,30 +14,45 @@ metadata:
       to a LRA action. If satisfies the spec definition the application is later informed
       if LRA was successfuly completed or failed (compensate is needed).
       The transaction handling is based on Saga pattern.
-    tags: "java, transaction, saga" 
+    tags: "java, transaction, saga"
     iconClass: fa-shield
-    template.openshift.io/provider-display-name: "Red Hat, Inc." 
-    template.openshift.io/documentation-url: "https://github.com/jbosstm/narayana/tree/master/rts/lra/lra-coordinator" 
+    template.openshift.io/provider-display-name: "Red Hat, Inc."
+    template.openshift.io/documentation-url: "https://github.com/jbosstm/narayana/tree/master/rts/lra/lra-coordinator"
     template.openshift.io/support-url: "https://access.redhat.com"
-  message: "LRA coordinator is ready to serve actions"
+  message: "LRA coordinator is ready to serve long running actions (LRAs)"
 labels:
   template: "lra-coordinator"
 parameters:
   - name: APPLICATION_NAME
     value: lra-coordinator
     displayName: "LRA Coordinator App Name"
-    description: "The name for application created by this template."
+    description: "The name of the application created by this template."
     required: true
   - name: DOCKER_IMAGE
     value: "docker.io/jbosstm/lra-coordinator:latest"
     displayName: "Docker image of LRA coordinator"
     required: true
+  - name: VOLUME_CAPACITY
+    displayName: "Volume Capacity"
+    description: "Volume space available for transaction log store, e.g. 512Mi, 2Gi."
+    value: "1Gi"
+    required: true
 objects:
+- kind: PersistentVolumeClaim
+  apiVersion: v1
+  metadata:
+    labels:
+      app: ${APPLICATION_NAME}
+    name: ${APPLICATION_NAME}
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: ${VOLUME_CAPACITY}
 - kind: Service
   apiVersion: v1
   metadata:
-    annotations:
-      openshift.io/generated-by: OpenShiftNewApp
     labels:
       app: ${APPLICATION_NAME}
     name: ${APPLICATION_NAME}
@@ -57,8 +72,6 @@ objects:
 - kind: DeploymentConfig
   apiVersion: v1
   metadata:
-    annotations:
-      openshift.io/generated-by: OpenShiftNewApp
     generation: 1
     labels:
       app: ${APPLICATION_NAME}
@@ -80,8 +93,6 @@ objects:
       type: Rolling
     template:
       metadata:
-        annotations:
-          openshift.io/generated-by: OpenShiftNewApp
         labels:
           app: ${APPLICATION_NAME}
           deploymentconfig: ${APPLICATION_NAME}
@@ -95,6 +106,13 @@ objects:
           resources: {}
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
+          volumeMounts:
+          - name: ${APPLICATION_NAME}-data
+            mountPath: /data
+        volumes:
+        - name: ${APPLICATION_NAME}-data
+          persistentVolumeClaim:
+            claimName: ${APPLICATION_NAME}
         dnsPolicy: ClusterFirst
         restartPolicy: Always
         schedulerName: default-scheduler
@@ -110,21 +128,14 @@ objects:
         - ${APPLICATION_NAME}
         from:
           kind: ImageStreamTag
-          name: lra-coordinator:1.0
-  status:
-    availableReplicas: 0
-    latestVersion: 0
-    observedGeneration: 0
-    replicas: 0
-    unavailableReplicas: 0
-    updatedReplicas: 0
+          name: ${APPLICATION_NAME}:1.0
 - kind: ImageStream
   apiVersion: v1
   metadata:
     generation: 0
     labels:
-      app: lra-coordinator
-    name: lra-coordinator
+      app: ${APPLICATION_NAME}
+    name: ${APPLICATION_NAME}
   spec:
     lookupPolicy:
       local: true
