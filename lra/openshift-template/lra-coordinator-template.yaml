@@ -32,10 +32,20 @@ parameters:
     value: "docker.io/jbosstm/lra-coordinator:latest"
     displayName: "Docker image of LRA coordinator"
     required: true
+  - name: VOLUME_NAME
+    displayName: "Persistent Volume Name"
+    description: >-
+      If you want to bind the lra coordinator transaction log store to the specific
+      volume defined by you beforehand then use the name of the persistent volume here.
+      If you are running on Red Hat CDK/Minishift then there are persistent volumes
+      defined for your testing already. The naming is 'pv0001' up to 'pv0100'.
+      But if you are fine with whatever volume being used just leave this empty.
+    value:
+    required: false
   - name: VOLUME_CAPACITY
     displayName: "Volume Capacity"
     description: "Volume space available for transaction log store, e.g. 512Mi, 2Gi."
-    value: "1Gi"
+    value: "200Mi"
     required: true
 objects:
 - kind: PersistentVolumeClaim
@@ -50,6 +60,7 @@ objects:
     resources:
       requests:
         storage: ${VOLUME_CAPACITY}
+    volumeName: ${VOLUME_NAME}
 - kind: Service
   apiVersion: v1
   metadata:
