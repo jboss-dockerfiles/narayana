@@ -2,7 +2,7 @@
 
 This is a set of resources related to http://narayana.io[Narayana].
 
-You can find here docker images and templates for OpenShift
+You can find here docker images and templates for OpenShift. The related docker images are published at Docker Hub under project `jbosstm`: https://hub.docker.com/r/jbosstm/
 
 == JTS related
 
