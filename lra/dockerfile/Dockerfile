@@ -22,5 +22,5 @@ ENV LOG_LEVEL="INFO"
 ENV OBJECT_STORE_PATH="../../data"
 ADD run-java-options /opt/
 
-ENV AB_ENABLED off
+ENV AB_JOLOKIA_OFF true
 ENV JAVA_APP_JAR lra-coordinator-swarm.jar
