@@ -15,7 +15,7 @@ metadata:
       if LRA was successfuly completed or failed (compensate is needed).
       The transaction handling is based on Saga pattern.
     tags: "java, transaction, saga"
-    iconClass: fa-shield
+    iconClass: icon-jboss
     template.openshift.io/provider-display-name: "Red Hat, Inc."
     template.openshift.io/documentation-url: "https://github.com/jbosstm/narayana/tree/master/rts/lra/lra-coordinator"
     template.openshift.io/support-url: "https://access.redhat.com"
@@ -76,14 +76,10 @@ objects:
     selector:
       app: ${APPLICATION_NAME}
       deploymentconfig: ${APPLICATION_NAME}
-    sessionAffinity: None
     type: ClusterIP
-  status:
-    loadBalancer: {}
 - kind: DeploymentConfig
   apiVersion: v1
   metadata:
-    generation: 1
     labels:
       app: ${APPLICATION_NAME}
     name: ${APPLICATION_NAME}
@@ -93,15 +89,7 @@ objects:
       app: ${APPLICATION_NAME}
       deploymentconfig: ${APPLICATION_NAME}
     strategy:
-      activeDeadlineSeconds: 21600
-      resources: {}
-      rollingParams:
-        intervalSeconds: 1
-        maxSurge: 25%
-        maxUnavailable: 25%
-        timeoutSeconds: 600
-        updatePeriodSeconds: 1
-      type: Rolling
+      type: Recreate
     template:
       metadata:
         labels:
@@ -111,12 +99,24 @@ objects:
         containers:
         - imagePullPolicy: IfNotPresent
           name: ${APPLICATION_NAME}
+          env:
+          - name: AB_JOLOKIA_OFF
+            value: "true"
           ports:
           - containerPort: 8080
             protocol: TCP
-          resources: {}
-          terminationMessagePath: /dev/termination-log
-          terminationMessagePolicy: File
+          livenessProbe:
+            httpGet:
+              path: /lra-coordinator
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 180
+          readinessProbe:
+            httpGet:
+              path: /lra-coordinator
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 10
           volumeMounts:
           - name: ${APPLICATION_NAME}-data
             mountPath: /data
@@ -124,12 +124,6 @@ objects:
         - name: ${APPLICATION_NAME}-data
           persistentVolumeClaim:
             claimName: ${APPLICATION_NAME}
-        dnsPolicy: ClusterFirst
-        restartPolicy: Always
-        schedulerName: default-scheduler
-        securityContext: {}
-        terminationGracePeriodSeconds: 30
-    test: false
     triggers:
     - type: ConfigChange
     - type: ImageChange
@@ -143,7 +137,6 @@ objects:
 - kind: ImageStream
   apiVersion: v1
   metadata:
-    generation: 0
     labels:
       app: ${APPLICATION_NAME}
     name: ${APPLICATION_NAME}
