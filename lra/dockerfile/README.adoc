@@ -43,18 +43,20 @@ You can pull it (the tag `latest`) by running
 docker pull docker.io/jbosstm/lra-coordinator
 ```
 
+== Release the lra docker image to Dockerhub
+
 If you build the image you can push the new version to dockerhub with sequence
 
 ```bash
 # tagging the lra-coordinator to be possible to be pushed to docker hub
-docker tag lra-coordinator docker.io/jbosstm/lra-coordinator:5.7.1.Final
-docker tag lra-coordinator docker.io/jbosstm/lra-coordinator:latest
+docker tag lra-coordinator:latest docker.io/jbosstm/lra-coordinator:${NARAYANA_VERSION}
+docker tag lra-coordinator:latest docker.io/jbosstm/lra-coordinator:latest
 # logging to the docker hub
 docker login docker.io
 # pushing the tagged image to dockerhub
-git push docker.io/jbosstm/lra-coordinator:5.7.1.Final
+docker push docker.io/jbosstm/lra-coordinator:${NARAYANA_VERSION}
 ## will rewrite the image marked as 'latest' at the docker hub
-git push  docker.io/jbosstm/lra-coordinator:latest
+docker push  docker.io/jbosstm/lra-coordinator:latest
 ```
 
 == Running the lra-coordinator at OpenShift
