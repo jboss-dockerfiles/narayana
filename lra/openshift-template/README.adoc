@@ -1,0 +1,23 @@
+= Working with the OpenShift lra-coordinator template
+
+For getting the `lra-coordinator` running on your OpenShift instance you can
+use this template which downloads docker image from https://hub.docker.com/r/jbosstm/lra-coordinator
+and let it running on your OpenShift instance.
+
+Start by importing the template
+
+```bash
+# relative path
+oc create -f lra-coordinator-template.yaml
+
+# absolute path
+cat /home/narayana/jboss-dockerfiles/lra/openshift-template/lra-coordinator-template.yaml | oc create -f -
+```
+
+When the template is imported you can deploy the lra-coordinator as a new application
+either from the OpenShift webconsole (Add to project -> Browse catalog -> Java -> Narayana LRA Coordinator)
+or you can start it from console
+
+```bash
+oc new-app --template=lra-coordinator -e LOG_LEVEL=TRACE
+```

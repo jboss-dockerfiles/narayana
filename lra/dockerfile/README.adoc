@@ -1,0 +1,67 @@
+= Dockerfile for lra-coordinator
+
+The Dockerfile builds a docker image of lra coordinator
+which can be contacted to manage Long Running Actions, see
+https://github.com/jbosstm/microprofile-sandbox/blob/master/proposals/0009-LRA/README.md
+
+You can redefine following variables when building the image.
+
+== Building the Dockerfile
+
+`NARAYANA_VERSION`::
+  is used only during docker build and defines what version of Narayana
+  will be downloaded and lra coordinator extracted from that
+`LOG_LEVEL`::
+  could be defined on docker run, value changes log level produced by the WildFly Swarm,
+  the values are standard log levels (INFO, DEBUG, TRACE...)
+
+The lra coordinator is run under user `jboss` and exposes port `8080` for communication.
+
+== Usage
+
+```bash
+# export NARAYANA_VERSION=...
+docker build -t lra-coordinator --build-arg NARAYANA_VERSION=$NARAYANA_VERSION .
+```
+
+== Running localy
+
+I you want to run locally you use the following command. This starts the docker
+image `lra-cordinator` you've just built and define the logging to be set to
+TRACE level.
+
+```bash
+docker run -p 8080:8080 --rm -it -e LOG_LEVEL=TRACE lra-coordinator
+```
+
+== Docker image at Dockerhub
+
+The `lra-coordinator` image is available at https://hub.docker.com/r/jbosstm/lra-coordinator.
+You can pull it (the tag `latest`) by running
+
+```bash
+docker pull docker.io/jbosstm/lra-coordinator
+```
+
+== Release the lra docker image to Dockerhub
+
+If you build the image you can push the new version to dockerhub with sequence
+
+```bash
+# tagging the lra-coordinator to be possible to be pushed to docker hub
+docker tag lra-coordinator:latest docker.io/jbosstm/lra-coordinator:${NARAYANA_VERSION}
+docker tag lra-coordinator:latest docker.io/jbosstm/lra-coordinator:latest
+# logging to the docker hub
+docker login docker.io
+# pushing the tagged image to dockerhub
+docker push docker.io/jbosstm/lra-coordinator:${NARAYANA_VERSION}
+## will rewrite the image marked as 'latest' at the docker hub
+docker push  docker.io/jbosstm/lra-coordinator:latest
+```
+
+== Running the lra-coordinator at OpenShift
+
+This docker image is used to start the `lra-coordinator` at OpenShift when you
+use the link:../openshift-template[template] in this repo. When you import it
+and create new app the docker image will be downloaded from the dockerhub
+and run at the OpenShift instance.
