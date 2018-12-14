@@ -16,9 +16,10 @@ RUN chown -R jboss /deployments \
   && chown -R jboss:root /deployments
 USER jboss
 
-RUN curl -LOk https://www.jboss.org/jbosstm/downloads/5.9.3.Final-SNAPSHOT/binary/narayana-full-5.9.3.Final-SNAPSHOT-bin.zip 
-RUN unzip -j narayana-full-5.9.3.Final-SNAPSHOT-bin.zip narayana-full-5.9.3.Final-SNAPSHOT/rts/lra/lra-coordinator-swarm.jar -d /deployments/
-RUN rm narayana-full-5.9.3.Final-SNAPSHOT-bin.zip
+ARG NARAYANA_VERSION=5.9.2.Final
+RUN curl -LOk https://www.jboss.org/jbosstm/downloads/${NARAYANA_VERSION}/binary/narayana-full-${NARAYANA_VERSION}-bin.zip \
+    && unzip -j narayana-full-${NARAYANA_VERSION}-bin.zip narayana-full-${NARAYANA_VERSION}/rts/lra/lra-coordinator-swarm.jar -d /deployments/ \
+    && rm narayana-full-$NARAYANA_VERSION-bin.zip
 
 # expected values INFO, DEBUG, TRACE...
 ENV LOG_LEVEL="INFO"
