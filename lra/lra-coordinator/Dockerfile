@@ -1,5 +1,4 @@
-#FROM redhat-openjdk-18/openjdk18-openshift
-FROM jboss/base-jdk:8
+FROM redhat-openjdk-18/openjdk18-openshift
 MAINTAINER Ondrej Chaloupka <ochaloup@redhat.com>
 EXPOSE 8080
 
@@ -10,7 +9,7 @@ RUN chown -R jboss /data \
   && usermod -g root -G `id -g jboss` jboss \
   && chmod -R "g+rwX" /data \
   && chown -R jboss:root /data
-RUN mkdir /deployments
+# RUN mkdir /deployments
 RUN chown -R jboss /deployments \
   && chmod -R "g+rwX" /deployments \
   && chown -R jboss:root /deployments
