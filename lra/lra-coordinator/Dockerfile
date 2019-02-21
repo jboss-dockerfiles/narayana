@@ -15,7 +15,7 @@ RUN chown -R jboss /deployments \
   && chown -R jboss:root /deployments
 USER jboss
 
-ARG NARAYANA_VERSION=5.9.2.Final
+ARG NARAYANA_VERSION=5.9.3.Final-SNAPSHOT
 RUN curl -LOk https://www.jboss.org/jbosstm/downloads/${NARAYANA_VERSION}/binary/narayana-full-${NARAYANA_VERSION}-bin.zip \
     && unzip -j narayana-full-${NARAYANA_VERSION}-bin.zip narayana-full-${NARAYANA_VERSION}/rts/lra/lra-coordinator-swarm.jar -d /deployments/ \
     && rm narayana-full-$NARAYANA_VERSION-bin.zip
