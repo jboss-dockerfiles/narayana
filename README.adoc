@@ -4,6 +4,14 @@ This is a set of resources related to http://narayana.io[Narayana].
 
 You can find here docker images and templates for OpenShift. The related docker images are published at Docker Hub under project `jbosstm`: https://hub.docker.com/r/jbosstm/
 
+== Getting help
+
+If you need help with using Narayana, please visit our forums at:
+https://developer.jboss.org/en/jbosstm/
+
+If you think you have found an error in our code, please raise an issue over on:
+https://issues.jboss.org/browse/JBTM
+
 == JTS related
 
 Resources related to JTS transaction service
