@@ -1,3 +1,0 @@
-
-# executed from '/opt' directory by fabric8
-echo "-Dswarm.logging=$LOG_LEVEL -Dswarm.transactions.object-store-path=$OBJECT_STORE_PATH"

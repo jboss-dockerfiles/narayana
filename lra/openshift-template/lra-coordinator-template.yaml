@@ -99,9 +99,6 @@ objects:
         containers:
         - imagePullPolicy: IfNotPresent
           name: ${APPLICATION_NAME}
-          env:
-          - name: AB_JOLOKIA_OFF
-            value: "true"
           ports:
           - containerPort: 8080
             protocol: TCP
