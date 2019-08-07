@@ -17,7 +17,7 @@ USER jboss
 
 ARG NARAYANA_VERSION=5.9.3.Final
 RUN curl -LOk https://www.jboss.org/jbosstm/downloads/${NARAYANA_VERSION}/binary/narayana-full-${NARAYANA_VERSION}-bin.zip \
-    && unzip -j narayana-full-${NARAYANA_VERSION}-bin.zip narayana-full-${NARAYANA_VERSION}/rts/lra/lra-coordinator-swarm.jar -d /deployments/ \
+    && unzip -j narayana-full-${NARAYANA_VERSION}-bin.zip narayana-full-${NARAYANA_VERSION}/rts/lra/lra-coordinator-thorntail.jar -d /deployments/ \
     && rm narayana-full-$NARAYANA_VERSION-bin.zip
 
 COPY run-lra-coordinator.sh /deployments
@@ -28,4 +28,4 @@ ENV LOG_LEVEL="INFO"
 ENV OBJECT_STORE_PATH="/data"
 
 ENTRYPOINT ["/bin/sh", "/deployments/run-lra-coordinator.sh"]
-CMD [ "/deployments/lra-coordinator-swarm.jar" ]
+CMD [ "/deployments/lra-coordinator-thorntail.jar" ]
