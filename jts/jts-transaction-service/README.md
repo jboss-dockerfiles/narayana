@@ -2,6 +2,20 @@
 
 This image contains JTS transaction service which works in conjunction with JacORB name server.
 
+
+== Building the Dockerfile
+
+`NARAYANA_VERSION`::
+  is used only during docker build and defines what version of Narayana
+  will be downloaded
+
+== Usage
+
+```bash
+# export NARAYANA_VERSION=...
+docker build -t jts-transaction-service --build-arg NARAYANA_VERSION=$NARAYANA_VERSION .
+```
+
 ## Run container
 
     docker run -p 4711:4711 -it --link jacorb-name-server:jacorb-name-server --name jts-transaction-service jboss/jts-transaction-service

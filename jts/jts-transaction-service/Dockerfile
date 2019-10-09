@@ -3,9 +3,11 @@ MAINTAINER Gytis Trikleris <gytis@redhat.com>
 WORKDIR /opt/jboss
 EXPOSE 4711
 
-ENV NARAYANA_VERSION=5.2.1.Final \
-    NARAYANA_HOME=/opt/jboss/narayana \
+ENV NARAYANA_HOME=/opt/jboss/narayana \
     JACORB_LOG_LEVEL=3
+
+ARG NARAYANA_VERSION
+RUN test -n "$NARAYANA_VERSION" || (echo "NARAYANA_VERSION  not set" && false)
 
 RUN curl -LOk https://www.jboss.org/jbosstm/downloads/$NARAYANA_VERSION/binary/narayana-full-$NARAYANA_VERSION-bin.zip \
     && unzip narayana-full-$NARAYANA_VERSION-bin.zip \

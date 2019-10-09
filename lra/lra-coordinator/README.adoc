@@ -21,7 +21,7 @@ The lra coordinator is run under user `jboss` and exposes port `8080` for commun
 
 ```bash
 # export NARAYANA_VERSION=...
-docker build -t lra-coordinator --build-arg NARAYANA_VERSION=$NARAYANA_VERSION .
+ocker build -t lra-coordinator --build-arg NARAYANA_VERSION=$NARAYANA_VERSION .
 ```
 
 == Running localy
