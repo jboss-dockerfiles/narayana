@@ -19,7 +19,8 @@ ARG NARAYANA_VERSION
 RUN test -n "$NARAYANA_VERSION" || (echo "NARAYANA_VERSION  not set" && false)
 
 RUN curl -LOk https://www.jboss.org/jbosstm/downloads/${NARAYANA_VERSION}/binary/narayana-full-${NARAYANA_VERSION}-bin.zip \
-    && unzip -j narayana-full-${NARAYANA_VERSION}-bin.zip narayana-full-${NARAYANA_VERSION}/rts/lra/lra-coordinator-thorntail.jar -d /deployments/ \
+    && unzip -j narayana-full-${NARAYANA_VERSION}-bin.zip narayana-full-${NARAYANA_VERSION}/rts/lra/lra-coordinator-runner.jar -d /deployments/ \
+    && unzip -j narayana-full-${NARAYANA_VERSION}-bin.zip "narayana-full-${NARAYANA_VERSION}/rts/lra/lib/*" -d /deployments/lib \
     && rm narayana-full-$NARAYANA_VERSION-bin.zip
 
 COPY run-lra-coordinator.sh /deployments
@@ -30,4 +31,4 @@ ENV LOG_LEVEL="INFO"
 ENV OBJECT_STORE_PATH="/data"
 
 ENTRYPOINT ["/bin/sh", "/deployments/run-lra-coordinator.sh"]
-CMD [ "/deployments/lra-coordinator-thorntail.jar" ]
+CMD [ "/deployments/lra-coordinator-runner.jar" ]
