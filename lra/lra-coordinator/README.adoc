@@ -12,16 +12,21 @@ You can redefine following variables when building the image.
   is used only during docker build and defines what version of Narayana
   will be downloaded and lra coordinator extracted from that
 `LOG_LEVEL`::
-  could be defined on docker run, value changes log level produced by the WildFly Swarm,
-  the values are standard log levels (INFO, DEBUG, TRACE...)
+  It could be defined on docker run. The value sets log level for messages produced by the LRA coordinator.
+  The permitted values are log levels defined by Quarkus runtime (https://quarkus.io/guides/logging).
+  The default log level value is `INFO`.
+`OBJECT_STORE_PATH`::
+  It could be defined on docker run.
+  It defines a directory where the transaction log is stored. Transaction log is the persistent storage
+  of the LRA coordinator. The default location is directory `/data`.
 
 The lra coordinator is run under user `jboss` and exposes port `8080` for communication.
 
-== Usage
+== Docker build
 
 ```bash
-# export NARAYANA_VERSION=...
-ocker build -t lra-coordinator --build-arg NARAYANA_VERSION=$NARAYANA_VERSION .
+export NARAYANA_VERSION=...
+docker build -t lra-coordinator --build-arg NARAYANA_VERSION=$NARAYANA_VERSION .
 ```
 
 == Running localy
