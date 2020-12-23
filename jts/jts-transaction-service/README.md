@@ -51,7 +51,7 @@ NOTE: In the docker configuration we have provided, the OrbPortabilityEnvironmen
 
 Individual configuration options can be passed via the NARAYANA_OPTS environment variable. Use docker's -e option for that.
 
--e "NARAYANA_OPTS=\"-DObjectStoreEnvironmentBean.objectSreDir=/opt/jboss/narayana/object-store\""
+-e "NARAYANA_OPTS=\"-DObjectStoreEnvironmentBean.objectStoreDir=/opt/jboss/narayana/object-store\""
 
 ### Providing external libraries
 
