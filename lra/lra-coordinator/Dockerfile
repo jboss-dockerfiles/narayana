@@ -18,7 +18,8 @@ USER jboss
 ARG NARAYANA_VERSION
 RUN test -n "$NARAYANA_VERSION" || (echo "NARAYANA_VERSION  not set" && false)
 
-RUN curl -LOk https://www.jboss.org/jbosstm/downloads/${NARAYANA_VERSION}/binary/narayana-full-${NARAYANA_VERSION}-bin.zip \
+ARG NARAYANA_FULL_URL="https://www.jboss.org/jbosstm/downloads/${NARAYANA_VERSION}/binary/narayana-full-${NARAYANA_VERSION}-bin.zip"
+RUN curl -LOk "$NARAYANA_FULL_URL" \
     && unzip -j narayana-full-${NARAYANA_VERSION}-bin.zip narayana-full-${NARAYANA_VERSION}/rts/lra/lra-coordinator-runner.jar -d /deployments/ \
     && unzip -j narayana-full-${NARAYANA_VERSION}-bin.zip "narayana-full-${NARAYANA_VERSION}/rts/lra/lib/*" -d /deployments/lib \
     && rm narayana-full-$NARAYANA_VERSION-bin.zip

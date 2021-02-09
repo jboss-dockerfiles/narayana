@@ -11,6 +11,9 @@ You can redefine following variables when building the image.
 `NARAYANA_VERSION`::
   is used only during docker build and defines what version of Narayana
   will be downloaded and lra coordinator extracted from that
+`NARAYANA_FULL_URL`::
+  is used during docker build to redefine default location of narayana-full zip file,
+  ie. the location where Narayana distro is downloaded from and where the lra-coordinator jar is taken from.
 `LOG_LEVEL`::
   It could be defined on docker run. The value sets log level for messages produced by the LRA coordinator.
   The permitted values are log levels defined by Quarkus runtime (https://quarkus.io/guides/logging).
