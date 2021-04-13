@@ -20,9 +20,10 @@ RUN test -n "$NARAYANA_VERSION" || (echo "NARAYANA_VERSION  not set" && false)
 
 ARG NARAYANA_FULL_URL="https://www.jboss.org/jbosstm/downloads/${NARAYANA_VERSION}/binary/narayana-full-${NARAYANA_VERSION}-bin.zip"
 RUN curl -LOk "$NARAYANA_FULL_URL" \
-    && unzip -j narayana-full-${NARAYANA_VERSION}-bin.zip narayana-full-${NARAYANA_VERSION}/rts/lra/lra-coordinator-runner.jar -d /deployments/ \
-    && unzip -j narayana-full-${NARAYANA_VERSION}-bin.zip "narayana-full-${NARAYANA_VERSION}/rts/lra/lib/*" -d /deployments/lib \
-    && rm narayana-full-$NARAYANA_VERSION-bin.zip
+    && unzip -j narayana-full-${NARAYANA_VERSION}-bin.zip narayana-full-${NARAYANA_VERSION}/rts/lra/lra-coordinator-runner.jar -d /deployments/
+RUN unzip -j narayana-full-${NARAYANA_VERSION}-bin.zip "narayana-full-${NARAYANA_VERSION}/rts/lra/lib/*" -d /deployments/lib \
+    || echo 'No lra/lib files found, skipping to include them under Quarkus deployments'
+RUN rm narayana-full-$NARAYANA_VERSION-bin.zip
 
 COPY run-lra-coordinator.sh /deployments
 
