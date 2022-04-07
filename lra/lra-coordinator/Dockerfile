@@ -1,5 +1,4 @@
-FROM jboss/base-jdk:8
-MAINTAINER Ondrej Chaloupka <ochaloup@redhat.com>
+FROM registry.access.redhat.com/ubi8/openjdk-8-runtime
 EXPOSE 8080
 
 # using jboss user as one java jar is started under
@@ -9,8 +8,7 @@ RUN mkdir /data \
   && usermod -g root -G `id -g jboss` jboss \
   && chmod -R "g+rwX" /data \
   && chown -R jboss:root /data
-RUN mkdir /deployments \
-  && chown -R jboss /deployments \
+RUN chown -R jboss /deployments \
   && chmod -R "g+rwX" /deployments \
   && chown -R jboss:root /deployments
 USER jboss

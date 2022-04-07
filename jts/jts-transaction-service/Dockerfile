@@ -1,5 +1,4 @@
-FROM jboss/base-jdk:8
-MAINTAINER Gytis Trikleris <gytis@redhat.com>
+FROM registry.access.redhat.com/ubi8/openjdk-8-runtime
 WORKDIR /opt/jboss
 EXPOSE 4711
 
