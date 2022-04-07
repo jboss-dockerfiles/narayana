@@ -1,75 +1,56 @@
 = Dockerfile for lra-coordinator
 
-The Dockerfile builds a docker image of lra coordinator
-which can be contacted to manage Long Running Actions, see
-https://github.com/jbosstm/microprofile-sandbox/blob/master/proposals/0009-LRA/README.md
+The Dockerfile in this folder builds an image for the LRA coordinator, which can be used to manage Long Running Actions (more info [here](https://www.narayana.io//docs/project/index.html#d0e15502))
 
-You can redefine following variables when building the image.
+== Environment Variables
 
-== Building the Dockerfile
+The following environment variables can be used when building the image.
 
-`NARAYANA_VERSION`::
-  is used only during docker build and defines what version of Narayana
-  will be downloaded and lra coordinator extracted from that
-`NARAYANA_FULL_URL`::
-  is used during docker build to redefine default location of narayana-full zip file,
-  ie. the location where Narayana distro is downloaded from and where the lra-coordinator jar is taken from.
-`LOG_LEVEL`::
-  It could be defined on docker run. The value sets log level for messages produced by the LRA coordinator.
-  The permitted values are log levels defined by Quarkus runtime (https://quarkus.io/guides/logging).
-  The default log level value is `INFO`.
-`OBJECT_STORE_PATH`::
-  It could be defined on docker run.
-  It defines a directory where the transaction log is stored. Transaction log is the persistent storage
-  of the LRA coordinator. The default location is directory `/data`.
+* `NARAYANA_VERSION` is used only during the `build` phase and defines what version of Narayana's LRA coordinator  will be downloaded
+* `NARAYANA_FULL_URL` is used during the `build` phase to set up the location where the Narayana distro will be downloaded from
+* `LOG_LEVEL` is used during the `run` phase to set up the level/accuracy of logging produced by the LRA coordinator. The permitted values are logging levels defined in the [Quarkus runtime](https://quarkus.io/guides/logging). The default logging level value is `INFO`.
+* `OBJECT_STORE_PATH` is used during the `run` phase to set up a directory where the transaction log is stored (which is the persistent storage of the LRA coordinator). The default location is the directory `/data`.
 
-The lra coordinator is run under user `jboss` and exposes port `8080` for communication.
+The lra coordinator is run by the user `jboss` and exposes port `8080` for communication.
 
-== Docker build
+== Build
 
 ```bash
 export NARAYANA_VERSION=...
-docker build -t lra-coordinator --build-arg NARAYANA_VERSION=$NARAYANA_VERSION .
+podman build --tag lra-coordinator --build-arg NARAYANA_VERSION=${NARAYANA_VERSION}
 ```
 
-== Running localy
+== Running the image locally
 
-I you want to run locally you use the following command. This starts the docker
-image `lra-cordinator` you've just built and define the logging to be set to
-TRACE level.
+The following command runs `lra-cordinator` locally and sets up the logging level to `TRACE`.
 
 ```bash
-docker run -p 8080:8080 --rm -it -e LOG_LEVEL=TRACE lra-coordinator
+podman run -p 8080:8080 --rm -it -e LOG_LEVEL=TRACE lra-coordinator
 ```
 
-== Docker image at Dockerhub
+== Image Repository
 
-The `lra-coordinator` image is available at https://hub.docker.com/r/jbosstm/lra-coordinator.
-You can pull it (the tag `latest`) by running
+The image of `lra-coordinator` is available in Narayana's official [quay.io repository](https://quay.io/repository/jbosstm/lra-coordinator):
 
 ```bash
-docker pull docker.io/jbosstm/lra-coordinator
+podman pull quay.io/jbosstm/lra-coordinator:latest
 ```
 
-== Release the lra docker image to Dockerhub
+== Release the lra docker image
 
-If you build the image you can push the new version to dockerhub with sequence
+After building the image of `lra-coordinator` (as explained in the section `Build`), it is possible to tag and push the new version to `quay.io` following the commands:
 
 ```bash
-# tagging the lra-coordinator to be possible to be pushed to docker hub
-docker tag lra-coordinator:latest docker.io/jbosstm/lra-coordinator:${NARAYANA_VERSION}
-docker tag lra-coordinator:latest docker.io/jbosstm/lra-coordinator:latest
-# logging to the docker hub
-docker login docker.io
-# pushing the tagged image to dockerhub
-docker push docker.io/jbosstm/lra-coordinator:${NARAYANA_VERSION}
-## will rewrite the image marked as 'latest' at the docker hub
-docker push  docker.io/jbosstm/lra-coordinator:latest
+# tagging the lra-coordinator to push it
+podman tag lra-coordinator quay.io/jbosstm/lra-coordinator:${NARAYANA_VERSION}
+podman tag lra-coordinator quay.io/jbosstm/lra-coordinator:latest
+# logging to quay.io
+podman login quay.io
+# pushing the tagged image
+podman push quay.io/jbosstm/lra-coordinator:${NARAYANA_VERSION}
+podman push quay.io/jbosstm/lra-coordinator:latest
 ```
 
-== Running the lra-coordinator at OpenShift
+== Running the lra-coordinator image in OpenShift
 
-This docker image is used to start the `lra-coordinator` at OpenShift when you
-use the link:../openshift-template[template] in this repo. When you import it
-and create new app the docker image will be downloaded from the dockerhub
-and run at the OpenShift instance.
+This docker image is used also to start the `lra-coordinator` in OpenShift. Please, refer to the link:../openshift-template[template] in this repo.
